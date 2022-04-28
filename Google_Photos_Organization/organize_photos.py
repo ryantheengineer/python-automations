@@ -44,9 +44,37 @@ def get_folder_names(rootdir):
     return unique_dirs
 
 
+def make_necessary_dirs(rootdir, unique_dirs):
+    """
+    Take the list of unique_dirs and make new directories with those names in
+    rootdir for combining the photos and JSON files.
 
+    Parameters
+    ----------
+    rootdir : string
+        DESCRIPTION.
+    unique_dirs : list of strings
+        DESCRIPTION.
+
+    Returns
+    -------
+    None.
+
+    """
+    path = rootdir
+    
+    for d in unique_dirs:
+        dirpath = path + "\\" + d
+        isExist = os.path.exists(dirpath)
+        
+        if not isExist:
+            # Create the directory because it does not exist
+            os.makedirs(dirpath)
+    
 
 
 if __name__ == "__main__":
     workingDirectory = "C:\\Users\\Ryan.Larson.ROCKWELLINC\\OneDrive - Rockwell Inc\\Desktop\\test_directory"
     unique_dirs = get_folder_names(workingDirectory)
+    
+    make_necessary_dirs(workingDirectory, unique_dirs)
