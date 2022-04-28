@@ -23,20 +23,24 @@ Created on Wed Apr 27 12:15:08 2022
 
 import os
 
-def get_folder_names(workingDirectory):
-    rootdir = workingDirectory
+def get_folder_names(rootdir):
+    all_dirs = []
     
-    all_directories = []
-    
-    for file in os.listdir(rootdir):
-        d = os.path.join(rootdir, file)
-        if os.path.isdir(d):
+    for rootdir, dirs, files in os.walk(rootdir):
+        for d in dirs:
             basename = os.path.basename(d)
-            all_directories.append(basename)
+            all_dirs.append(basename)
             
-    print(all_directories)
-    return all_directories
+    print(all_dirs)
+    unique_dirs = set(all_dirs)
+    unique_dirs = list(unique_dirs)
+    unique_dirs = unique_dirs.sort()
+    
+    
+    return unique_dirs
+
+
 
 if __name__ == "__main__":
     workingDirectory = "C:\\Users\\Ryan.Larson.ROCKWELLINC\\OneDrive - Rockwell Inc\\Desktop\\test_directory"
-    all_directories = get_folder_names(workingDirectory)
+    unique_dirs = get_folder_names(workingDirectory)
