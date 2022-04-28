@@ -34,10 +34,16 @@ def get_folder_names(rootdir):
     print(all_dirs)
     unique_dirs = set(all_dirs)
     unique_dirs = list(unique_dirs)
-    unique_dirs = unique_dirs.sort()
+    # unique_dirs = unique_dirs.sort()
     
-    
+    # Remove directories from consideration that contain "takeout" and "Google"
+    unique_dirs = [d for d in unique_dirs if "takeout" not in d.lower()]
+    unique_dirs = [d for d in unique_dirs if "google" not in d.lower()]
+    unique_dirs.sort()
+        
     return unique_dirs
+
+
 
 
 
