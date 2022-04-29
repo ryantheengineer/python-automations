@@ -88,7 +88,6 @@ if __name__ == "__main__":
     if args["rootdir"] is not None:
         workingDirectory = args["rootdir"]
     
-    # workingDirectory = "C:\\Users\\Ryan.Larson.ROCKWELLINC\\OneDrive - Rockwell Inc\\Desktop\\test_directory"
     unique_dirs = get_folder_names(workingDirectory)
     
     make_necessary_dirs(workingDirectory, unique_dirs)
