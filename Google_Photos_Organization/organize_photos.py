@@ -22,6 +22,7 @@ Created on Wed Apr 27 12:15:08 2022
 """
 
 import os
+import argparse
 
 def get_folder_names(rootdir):
     all_dirs = []
@@ -74,7 +75,20 @@ def make_necessary_dirs(rootdir, unique_dirs):
 
 
 if __name__ == "__main__":
-    workingDirectory = "C:\\Users\\Ryan.Larson.ROCKWELLINC\\OneDrive - Rockwell Inc\\Desktop\\test_directory"
+    # construct the argument parser and parse the arguments
+    ap = argparse.ArgumentParser()
+    # ap.add_argument("-f", "--input", type=str, required=True,
+    #     help="path to csv file")
+    ap.add_argument("-r", "--rootdir", type=str, required=True,
+        help="path to root directory")
+    # ap.add_argument("-s", "--showcharts", type=bool, required=False,
+    #     help="enter False to turn off charts, otherwise plotting will occur")
+    args = vars(ap.parse_args())
+    
+    if args["rootdir"] is not None:
+        workingDirectory = args["rootdir"]
+    
+    # workingDirectory = "C:\\Users\\Ryan.Larson.ROCKWELLINC\\OneDrive - Rockwell Inc\\Desktop\\test_directory"
     unique_dirs = get_folder_names(workingDirectory)
     
     make_necessary_dirs(workingDirectory, unique_dirs)
