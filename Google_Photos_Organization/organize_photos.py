@@ -23,25 +23,29 @@ Created on Wed Apr 27 12:15:08 2022
 
 import os
 import argparse
+import shutil
+import sys
+from time import sleep
+import numpy as np
 
 def get_folder_names(rootdir):
     all_dirs = []
-    
-    for rootdir, dirs, files in os.walk(rootdir):
+
+    for root, dirs, files in os.walk(rootdir):
         for d in dirs:
             basename = os.path.basename(d)
             all_dirs.append(basename)
-            
-    print(all_dirs)
+
+    # print(all_dirs)
     unique_dirs = set(all_dirs)
     unique_dirs = list(unique_dirs)
     # unique_dirs = unique_dirs.sort()
-    
+
     # Remove directories from consideration that contain "takeout" and "Google"
     unique_dirs = [d for d in unique_dirs if "takeout" not in d.lower()]
-    unique_dirs = [d for d in unique_dirs if "google" not in d.lower()]
+    # unique_dirs = [d for d in unique_dirs if "google" not in d.lower()]
     unique_dirs.sort()
-        
+
     return unique_dirs
 
 
@@ -63,15 +67,52 @@ def make_necessary_dirs(rootdir, unique_dirs):
 
     """
     path = rootdir
-    
+
     for d in unique_dirs:
         dirpath = path + "\\" + d
         isExist = os.path.exists(dirpath)
-        
+
         if not isExist:
             # Create the directory because it does not exist
             os.makedirs(dirpath)
-    
+
+
+def copy_to_new_dir(rootdir, unique_dirs):
+    # Get the count of files to be copied
+    fcount = 0
+    for root, dirs, files in os.walk(rootdir):
+        for file in files:
+            fcount += 1
+
+    # Walk through each file in rootdir and copy the files
+    i = 0
+    pct_complete = 0.0
+    for root, dirs, files in os.walk(rootdir):
+        for file in files:
+            # Get the full filepath of the current file
+            filepath = os.path.join(root, file)
+            # Get the name of the immediate folder the current file resides in
+            dir_basename = os.path.basename(root)
+
+            # Check if dir_basename is in the list unique_dirs. If so, locate
+            # the moved folder of the same name (located in rootdir) and copy
+            # the file at filepath to the new directory.
+            if dir_basename in unique_dirs:
+                i += 1
+                pct_complete = np.around((i / fcount)*100.0, 2)
+                # print("Found directory {} in unique_dirs".format(dir_basename))
+                copydir = rootdir + "\\" + dir_basename
+                # print("Copying file {} to {}".format(file, copydir))
+                shutil.copy(filepath, copydir)
+                print("{}% \tcomplete".format(pct_complete), end="\r")
+
+
+
+            # print(os.path.join(root, file))
+            # # print(rootdir)
+            # print(os.path.basename(root))
+            # print("")
+
 
 
 if __name__ == "__main__":
@@ -84,10 +125,14 @@ if __name__ == "__main__":
     # ap.add_argument("-s", "--showcharts", type=bool, required=False,
     #     help="enter False to turn off charts, otherwise plotting will occur")
     args = vars(ap.parse_args())
-    
+
     if args["rootdir"] is not None:
         workingDirectory = args["rootdir"]
-    
+
     unique_dirs = get_folder_names(workingDirectory)
-    
+
     make_necessary_dirs(workingDirectory, unique_dirs)
+
+    print("")
+
+    copy_to_new_dir(workingDirectory, unique_dirs)
