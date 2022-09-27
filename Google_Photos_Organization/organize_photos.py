@@ -87,24 +87,28 @@ def copy_to_new_dir(rootdir, unique_dirs):
     # Walk through each file in rootdir and copy the files
     i = 0
     pct_complete = 0.0
+    failed_filepaths = []
     for root, dirs, files in os.walk(rootdir):
         for file in files:
             # Get the full filepath of the current file
             filepath = os.path.join(root, file)
             # Get the name of the immediate folder the current file resides in
             dir_basename = os.path.basename(root)
-
-            # Check if dir_basename is in the list unique_dirs. If so, locate
-            # the moved folder of the same name (located in rootdir) and copy
-            # the file at filepath to the new directory.
-            if dir_basename in unique_dirs:
-                i += 1
-                pct_complete = np.around((i / fcount)*100.0, 2)
-                # print("Found directory {} in unique_dirs".format(dir_basename))
-                copydir = rootdir + "\\" + dir_basename
-                # print("Copying file {} to {}".format(file, copydir))
-                shutil.copy(filepath, copydir)
-                print("{}% \tcomplete".format(pct_complete), end="\r")
+    
+            try:
+                # Check if dir_basename is in the list unique_dirs. If so, locate
+                # the moved folder of the same name (located in rootdir) and copy
+                # the file at filepath to the new directory.
+                if dir_basename in unique_dirs:
+                    i += 1
+                    pct_complete = np.around((i / fcount)*100.0, 2)
+                    # print("Found directory {} in unique_dirs".format(dir_basename))
+                    copydir = rootdir + "\\" + dir_basename
+                    # print("Copying file {} to {}".format(file, copydir))
+                    shutil.copy(filepath, copydir)
+                    print("{}% \tcomplete".format(pct_complete), end="\r")
+            except:
+                failed_filepaths.append((filepath, dir_basename))                
 
 
 
