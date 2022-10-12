@@ -116,6 +116,8 @@ def copy_to_new_dir(rootdir, unique_dirs):
             # # print(rootdir)
             # print(os.path.basename(root))
             # print("")
+            
+    return failed_filepaths
 
 
 
@@ -139,4 +141,4 @@ if __name__ == "__main__":
 
     print("")
 
-    copy_to_new_dir(workingDirectory, unique_dirs)
+    failed_filepaths = copy_to_new_dir(workingDirectory, unique_dirs)
